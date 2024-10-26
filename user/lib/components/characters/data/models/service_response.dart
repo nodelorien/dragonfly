@@ -19,25 +19,3 @@ abstract interface class ServiceResponse<T, R>
       T Function(Object? json) fromJsonT,
       R Function(Object? json) fromJsonR) = _$ServiceResponse.fromJson;
 }
-
-/*
-void main() {
-  final response = ServiceResponse<Character, Origin>.fromJson({
-    "info": {"url": "http://alguna.com"},
-    "result": [
-      {"name": "origin 1"},
-      {"name": "origin 2"}
-    ],
-    "res": [
-      {"location": "location 1"},
-      {"location": "location 2"}
-    ]
-  }, (Object? raw) {
-    print("===>>>>> Calling T: $raw");
-    return Character.fromJson(raw as Map<String, Object?>);
-  }, (Object? raw) {
-    print("===>>>>> Calling R: $raw");
-    return Origin.fromJson(raw as Map<String, Object?>);
-  });
-}
-*/
