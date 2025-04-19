@@ -4,17 +4,17 @@ typedef DiItemType<T> = Map<String, T>;
 
 enum DragonflyInjectorType { singleton, factory }
 
-class DragonflyInjector {
-  static GetIt di = GetIt.instance;
-
+class DragonflyContainer {
   static void set<T extends Object>(String name, T dependency,
       {DragonflyInjectorType type = DragonflyInjectorType.singleton}) {
     if (type == DragonflyInjectorType.singleton) {
-      di.registerSingleton(dependency, instanceName: name);
+      if (!GetIt.I.isRegistered<T>(instanceName: name)) {
+        GetIt.I.registerSingleton<T>(dependency, instanceName: name);
+      }
     }
   }
 
   static T get<T extends Object>(String name) {
-    return di.get<T>(instanceName: name);
+    return GetIt.I.get<T>(instanceName: name);
   }
 }

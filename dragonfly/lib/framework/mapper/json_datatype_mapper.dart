@@ -17,17 +17,26 @@ class JsonDatatypeMapper {
   static T mapForGeneric<T>(Map<String, Object?> json, String jsonKey,
       {T? defaultValue, bool mustWithDefault = false}) {
     try {
-      if (json.containsKey(jsonKey)) {
-        if (json[jsonKey] != null) {
-          return json[jsonKey] as T;
-        }
+      if (json[jsonKey] != null) {
+        return json[jsonKey] as T;
       }
     } catch (e, s) {
       print(
           '[WARNING] Problem identifying "$jsonKey" on json map, e: $e => $s');
     }
-    if (mustWithDefault && defaultValue == null) {
-      throw Exception('[WARNING] Default value is wrong for key: "$jsonKey"');
+    // print(
+    //    "===>>>>>> ($T == ${json[jsonKey].runtimeType}) type: ${T} key: $jsonKey ->> ${json[jsonKey].runtimeType}");
+    final bool isNullable = "$T".contains("?");
+    if (isNullable) {
+      defaultValue = null;
+    }
+    if (T != json[jsonKey].runtimeType && !isNullable) {
+      throw Exception(
+          "Does not match data types received for '$jsonKey' data type: ${json[jsonKey].runtimeType}, data type in model $T!");
+    }
+    if ((mustWithDefault && defaultValue == null)) {
+      throw Exception(
+          '[WARNING] Default value is wrong for key: $mustWithDefault, "$jsonKey" as ${T}');
     }
     return defaultValue as T;
   }
@@ -41,9 +50,11 @@ class JsonDatatypeMapper {
       if (T is List) {
         return mapGenericList(e, factoryFn) as T;
       }
-      // if (T is FactoryModelWatcher) {
+
+      if (T is FactoryModelWatcher) {
+        print("jajajajjajajajaj ====>>>> $e");
+      }
       return factoryFn(e);
-      // }
     }).toList();
   }
 }
