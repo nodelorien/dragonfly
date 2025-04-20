@@ -17,9 +17,10 @@ class FactoryModelGenerator extends GeneratorForAnnotation<FactoryModel> {
       Element element, ConstantReader annotation, BuildStep buildStep) {
     element.visitChildren(visitor);
 
+    final bool isGeneric = annotation.peek('generic')?.boolValue ?? false;
+
     try {
       final properties = visitor.properties;
-      final bool isGeneric = annotation.peek('generic')?.boolValue ?? false;
 
       final construct = cb.Constructor((constructor) => constructor
         ..optionalParameters
@@ -57,14 +58,13 @@ class FactoryModelGenerator extends GeneratorForAnnotation<FactoryModel> {
       final String interfaceContract =
           createAbstractInterface(visitor, properties, isGeneric);
       visitor.genericTypes = [];
-      visitor.isGeneric = false;
+      visitor.isGeneric = isGeneric;
       visitor.properties = [];
       return "$model \n $interfaceContract";
     } catch (e) {
       visitor.genericTypes = [];
       visitor.isGeneric = false;
       visitor.properties = [];
-      // print("=====>>>>>> $e");
       return "";
     }
   }
@@ -87,8 +87,15 @@ class FactoryModelGenerator extends GeneratorForAnnotation<FactoryModel> {
               if (property.isDartList) {
                 String item = "(item) => item";
 
-                if (property.listTypeIsClass) {
+                // print("=====???? visitor ${property.listTypeIsClass}");
+
+                if (property.listTypeIsClass) {}
+
+                if (property.listTypeIsClass && isGeneric) {
                   item = "fromJson${property.listType}";
+                } else if (property.listTypeIsClass && !isGeneric) {
+                  item =
+                      "(e) => ${property.listType}.fromJson(e as Map<String, Object?>)";
                 }
 
                 parsedField = """
@@ -146,9 +153,6 @@ class FactoryModelGenerator extends GeneratorForAnnotation<FactoryModel> {
       final emitter = cb.DartEmitter();
       return DartFormatter().format('${abstractInterface.accept(emitter)}');
     } catch (e) {
-      print("=====>>>>>(types) ${visitor.genericTypes}");
-      print("=====>>>>> $e");
-
       return "";
     }
   }

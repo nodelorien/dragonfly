@@ -1,6 +1,5 @@
 class Delete {
   final String path;
-  const Delete({
-    this.path = ""
-  });
+  final Map<String, String>? headers;
+  const Delete({this.headers, this.path = ""});
 }

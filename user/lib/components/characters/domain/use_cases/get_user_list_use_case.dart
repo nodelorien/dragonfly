@@ -1,27 +1,14 @@
 // import 'package:dragonfly/core/framework/contracts/functional/either.dart';
 
-/*
-@BusinessComponent()
-class GetUserListUseCase
-    implements UseCase<UserParams, UserException, UserResponse> {
-  final UserRepository userRepository;
+import 'package:dragonfly_annotations/dragonfly_annotations.dart';
+import 'package:user/components/characters/data/repositories/character_repository.dart';
+
+@UseCase()
+class GetUserListUseCase {
+  final CharacterRepository userRepository;
 
   const GetUserListUseCase({required this.userRepository});
 
   @override
-  Future<Either<UserException, UserResponse>> exec(UserParams params) {
-    try {
-      return UserResponse(
-          userId: 1,
-          name: "name",
-          lastname: "kaka",
-          age: 12,
-          active: true,
-          creation: DateTime.now(),
-          devices: []);
-    } catch (e) {
-      return UserException();
-    }
-  }
+  Future<void> exec(params) async {}
 }
-*/

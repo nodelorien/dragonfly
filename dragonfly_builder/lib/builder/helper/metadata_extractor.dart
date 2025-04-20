@@ -88,6 +88,7 @@ class MedatadaExtractor {
       HttpAnnotations.delete => Delete,
       _ => null
     };
+
     if (method is Type) {
       return MedatadaExtractor.getFromElement(element, method, field);
     }

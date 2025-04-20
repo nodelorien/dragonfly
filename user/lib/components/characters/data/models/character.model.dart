@@ -20,10 +20,6 @@ class _$Character implements FactoryModelWatcher, Character {
     required this.episode,
     required this.url,
     required this.created,
-    required this.setObj,
-    required this.map,
-    this.obj,
-    required this.devices,
   });
 
   factory _$Character.fromJson(Map<String, Object?> json) {
@@ -32,7 +28,7 @@ class _$Character implements FactoryModelWatcher, Character {
             defaultValue: 123, mustWithDefault: true),
         name: JsonDatatypeMapper.mapForGeneric<String>(json, 'name',
             defaultValue: null, mustWithDefault: false),
-        status: JsonDatatypeMapper.mapForGeneric<bool>(json, 'status',
+        status: JsonDatatypeMapper.mapForGeneric<String>(json, 'status',
             defaultValue: null, mustWithDefault: false),
         species: JsonDatatypeMapper.mapForGeneric<String>(json, 'species',
             defaultValue: null, mustWithDefault: false),
@@ -43,8 +39,9 @@ class _$Character implements FactoryModelWatcher, Character {
         origin: Origin.fromJson(
           json['origin'] as Map<String, Object?>,
         ),
-        location: JsonDatatypeMapper.mapForGeneric<String>(json, 'location',
-            defaultValue: null, mustWithDefault: false),
+        location: Location.fromJson(
+          json['location'] as Map<String, Object?>,
+        ),
         image: JsonDatatypeMapper.mapForGeneric<String>(json, 'image',
             defaultValue: null, mustWithDefault: false),
         episode: JsonDatatypeMapper.mapGenericList<String>(
@@ -52,22 +49,14 @@ class _$Character implements FactoryModelWatcher, Character {
         url: JsonDatatypeMapper.mapForGeneric<String>(json, 'url',
             defaultValue: null, mustWithDefault: false),
         created: JsonDatatypeMapper.mapForGeneric<String>(json, 'created',
-            defaultValue: null, mustWithDefault: false),
-        setObj: JsonDatatypeMapper.mapForGeneric<Set<Origin>>(json, 'setObj',
-            defaultValue: null, mustWithDefault: false),
-        map: JsonDatatypeMapper.mapForGeneric<Map<String, int>>(json, 'map',
-            defaultValue: null, mustWithDefault: false),
-        obj: JsonDatatypeMapper.mapForGeneric<Object?>(json, 'obj',
-            defaultValue: null, mustWithDefault: false),
-        devices: JsonDatatypeMapper.mapGenericList<Object?>(
-            json['devices'] as List, (item) => item));
+            defaultValue: null, mustWithDefault: false));
   }
 
   final int id;
 
   final String name;
 
-  final bool status;
+  final String status;
 
   final String species;
 
@@ -77,7 +66,7 @@ class _$Character implements FactoryModelWatcher, Character {
 
   final Origin origin;
 
-  final String location;
+  final Location location;
 
   final String image;
 
@@ -86,14 +75,6 @@ class _$Character implements FactoryModelWatcher, Character {
   final String url;
 
   final String created;
-
-  final Set<Origin> setObj;
-
-  final Map<String, int> map;
-
-  final Object? obj;
-
-  final List<Object?> devices;
 }
 
 abstract class _$CharacterContract {
@@ -101,7 +82,7 @@ abstract class _$CharacterContract {
 
   String get name;
 
-  bool get status;
+  String get status;
 
   String get species;
 
@@ -111,7 +92,7 @@ abstract class _$CharacterContract {
 
   Origin get origin;
 
-  String get location;
+  Location get location;
 
   String get image;
 
@@ -120,12 +101,4 @@ abstract class _$CharacterContract {
   String get url;
 
   String get created;
-
-  Set<Origin> get setObj;
-
-  Map<String, int> get map;
-
-  Object? get obj;
-
-  List<Object?> get devices;
 }

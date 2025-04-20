@@ -6,6 +6,7 @@ import 'return_type.dart';
 class MethodRepositoryType {
   final String name;
   final String path;
+  final String connection;
   final bool cached;
   final HttpAnnotations type;
   final List<ParamsType> params;
@@ -20,6 +21,7 @@ class MethodRepositoryType {
       required this.params,
       required this.returnType,
       required this.isFuture,
+      this.connection = "default",
       this.cached = false,
       this.headers = const []});
 }

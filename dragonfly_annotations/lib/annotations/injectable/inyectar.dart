@@ -1,0 +1,3 @@
+class Inyectar {
+  const Inyectar();
+}

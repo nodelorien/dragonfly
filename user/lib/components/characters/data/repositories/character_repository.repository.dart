@@ -8,19 +8,14 @@ part of 'character_repository.dart';
 
 class _CharacterRepository implements CharacterRepository {
   @override
-  Future<List<Character>> getAll(
+  Future<Base> getAll(
     String name,
     List<String> julian,
   ) async {
-    final DragonflyNetworkHttpAdapter network =
-        DragonflyInjector.get<DragonflyNetworkHttpAdapter>(
-            '__df_network_default');
-    print(network);
-    final List<Map<String, Object?>> response = await network.callForList(
-        HttpMethods.post,
-        'https://rickandmortyapi.com/api/character',
-        null,
-        null);
-    return Character;
+    final DragonflyNetworkHttpAdapter network = DragonflyContainer()
+        .get<DragonflyNetworkHttpAdapter>(instanceName: '__http__default');
+    final Map<String, Object?> response =
+        await network.callForObject(HttpMethods.get, 'character', null, null);
+    return Base.fromJson(response);
   }
 }

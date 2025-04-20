@@ -24,15 +24,12 @@ class RepositoryGenerator extends GeneratorForAnnotation<Repository> {
 
     final className = visitor.className;
 
-    url = annotation.peek('path')?.stringValue ?? '';
+    url = annotation.peek('url')?.stringValue ?? '';
     connection = annotation.peek('connection')?.stringValue ?? '';
 
     for (MethodRepositoryType method in visitor.methods) {
-      if (method.type == HttpAnnotations.post) {
-        return buildPostMethod(className, method);
-      }
+      return buildHttpMethod(url, connection, className, method);
     }
-
     return "_no_code";
   }
 
@@ -47,7 +44,8 @@ class RepositoryGenerator extends GeneratorForAnnotation<Repository> {
     };
   }
 
-  String buildPostMethod(String className, MethodRepositoryType method) {
+  String buildHttpMethod(String repoUrl, String repoConn, String className,
+      MethodRepositoryType method) {
     final methodKind =
         method.returnType.isList ? "callForList" : "callForObject";
     final bool isList = method.returnType.isList;
@@ -55,6 +53,10 @@ class RepositoryGenerator extends GeneratorForAnnotation<Repository> {
     final String returnType = method.returnType.isList
         ? "List<Map<String, Object?>>"
         : "Map<String, Object?>";
+
+    final String response = isList
+        ? buildResponseWhenIsList(method)
+        : buildResponseWhenIsObject(method);
 
     final animal = Class((b) => b
       ..name = "_$className"
@@ -70,14 +72,23 @@ class RepositoryGenerator extends GeneratorForAnnotation<Repository> {
         ..annotations.add(refer('override'))
         ..returns = refer(method.returnType.raw)
         ..body = Code("final DragonflyNetworkHttpAdapter network = "
-            "DragonflyInjector.get<DragonflyNetworkHttpAdapter>('__df_network_default'); \n"
-            "print(network);"
-            "final $returnType response = await network.$methodKind($httpMethod, '${method.path}', null, null);\n"
-            "return ${method.returnType.modelName};\n"
+            "DragonflyContainer().get<DragonflyNetworkHttpAdapter>(instanceName: '__http__$repoConn'); \n"
+            "final $returnType response = await network.$methodKind($httpMethod, '$repoUrl${method.path}', null, null);\n"
+            "$response;\n"
             ""))));
 
     final emitter = DartEmitter();
     return DartFormatter().format('${animal.accept(emitter)}');
+  }
+
+  String buildResponseWhenIsList(MethodRepositoryType method) {
+    String modelName = method.returnType.modelName;
+    return "return response.map((e) => $modelName.fromJson(e)) as List<$modelName>";
+  }
+
+  String buildResponseWhenIsObject(MethodRepositoryType method) {
+    String modelName = method.returnType.modelName;
+    return "return $modelName.fromJson(response)";
   }
 
   String getMapperWhenMethodIsList() {

@@ -7,6 +7,8 @@ export 'package:dragonfly/framework/functional/either.dart';
 export 'package:dragonfly/framework/contracts/domain/use_case.dart';
 export 'package:dragonfly/framework/exceptions/dragonfly_exception.dart';
 export 'package:dragonfly/framework/di/dragonfly_container.dart';
+export 'package:dragonfly/framework/di/dragonfly_container_helper.dart';
+export 'package:dragonfly/framework/di/environment_filter.dart';
 export 'package:dragonfly/framework/network/adapter/dragonfly_network_http_adapter.dart';
 export 'package:dragonfly/framework/types/enums/http_methods.dart';
 export 'package:dragonfly/framework/mapper/json_datatype_mapper.dart';

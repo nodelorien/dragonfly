@@ -68,8 +68,7 @@ class FactoryModelVisitor extends SimpleElementVisitor<void> {
             "Object" == listType ||
             "Object?" == listType);
 
-    // print(
-    //   " [==== hard code field ] ${e.type.getDisplayString()} :: $isListClass \n\n");
+    // print(" [==== hard code field ] ${e.type} - (${e}) :: $isListClass \n\n");
 
     properties.add(FactoryModelField(
         name: e.displayName,

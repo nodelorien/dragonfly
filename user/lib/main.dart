@@ -1,4 +1,7 @@
+import 'package:dragonfly/dragonfly.dart';
 import 'package:flutter/material.dart';
+import 'package:user/components/characters/config/user_config.dart';
+import 'package:user/components/characters/data/repositories/character_repository.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,6 +43,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    DragonflyApp(config: UserConfig()).init();
+    /*CharacterRepository().getAll("sss", [""]).then(
+      (value) {
+        print("===>>>> comming from repo: ${value.results.first.episode}");
+      },
+    );*/
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,

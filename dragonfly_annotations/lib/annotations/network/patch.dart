@@ -1,6 +1,5 @@
 class Patch {
   final String path;
-  const Patch({
-    this.path = ""
-  });
+  final Map<String, String>? headers;
+  const Patch({this.headers, this.path = ""});
 }
