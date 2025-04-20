@@ -8,7 +8,7 @@ part of 'character_repository.dart';
 
 class _CharacterRepository implements CharacterRepository {
   @override
-  Future<Base> getAll(
+  Future<ServiceResponse<Character>> getAll(
     String name,
     List<String> julian,
   ) async {
@@ -16,6 +16,6 @@ class _CharacterRepository implements CharacterRepository {
         .get<DragonflyNetworkHttpAdapter>(instanceName: '__http__default');
     final Map<String, Object?> response =
         await network.callForObject(HttpMethods.get, 'character', null, null);
-    return Base.fromJson(response);
+    return ServiceResponseCharacter.fromJson(response);
   }
 }
