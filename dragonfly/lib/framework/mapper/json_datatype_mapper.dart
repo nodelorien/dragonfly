@@ -24,8 +24,6 @@ class JsonDatatypeMapper {
       print(
           '[WARNING] Problem identifying "$jsonKey" on json map, e: $e => $s');
     }
-    // print(
-    //    "===>>>>>> ($T == ${json[jsonKey].runtimeType}) type: ${T} key: $jsonKey ->> ${json[jsonKey].runtimeType}");
     final bool isNullable = "$T".contains("?");
     if (isNullable) {
       defaultValue = null;
@@ -36,7 +34,7 @@ class JsonDatatypeMapper {
     }
     if ((mustWithDefault && defaultValue == null)) {
       throw Exception(
-          '[WARNING] Default value is wrong for key: $mustWithDefault, "$jsonKey" as ${T}');
+          '[WARNING] Default value is wrong for key: $mustWithDefault, "$jsonKey" as $T');
     }
     return defaultValue as T;
   }
@@ -52,7 +50,7 @@ class JsonDatatypeMapper {
       }
 
       if (T is FactoryModelWatcher) {
-        print("jajajajjajajajaj ====>>>> $e");
+        print("Factory model watcher ====>>>> $e");
       }
       return factoryFn(e);
     }).toList();

@@ -20,12 +20,12 @@ dependencies:
     path: ../dragonfly_annotations
   collection: ^1.19.1
   path:
-  meta: ^1.16.0
+  meta:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints:
   build_runner:
 
 # For information on the generic Dart part of this file, see the

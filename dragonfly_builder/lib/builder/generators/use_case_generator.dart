@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:build/build.dart';
 import 'package:dragonfly_annotations/dragonfly_annotations.dart';
 import 'package:dragonfly_builder/builder/visitor/use_case_visitor.dart';
@@ -13,10 +14,10 @@ class UseCaseGenerator extends GeneratorForAnnotation<UseCase> {
 
   @override
   String generateForAnnotatedElement(
-      Element element, ConstantReader annotation, BuildStep buildStep) {
+      Element2 element, ConstantReader annotation, BuildStep buildStep) {
     final visitor = UseCaseVisitor();
 
-    element.visitChildren(visitor);
+    element.visitChildren2(visitor);
 
     final className = visitor.className;
 

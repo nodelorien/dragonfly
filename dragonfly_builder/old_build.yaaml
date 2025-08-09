@@ -1,0 +1,32 @@
+builders:
+  repository_generator:
+    import: "package:dragonfly_builder/builder.dart"
+    builder_factories: ["repositoryGenerator"]
+    build_extensions: { ".dart": [".repository.part"] }
+    auto_apply: dependents
+    build_to: source
+    applies_builders: ["source_gen|combining_builder"]
+
+  factory_model_generator:
+    import: "package:dragonfly_builder/builder.dart"
+    builder_factories: ["factoryModelGenerator"]
+    build_extensions: { ".dart": [".model.part"] }
+    auto_apply: dependents
+    build_to: source
+    applies_builders: ["source_gen|combining_builder"]
+
+  /injectable_builder:
+    import: "package:dragonfly_builder/builder.dart"
+    builder_factories: ["injectableBuilder"]
+    build_extensions: { ".dart": [".injectable.json"] }
+    auto_apply: dependents
+    runs_before: ["injectable_generator|injectable_config_builder"]
+    build_to: cache
+
+  injectable_config_builder:
+    import: "package:dragonfly_builder/builder.dart"
+    builder_factories: ["injectableConfigBuilder"]
+    build_extensions: { ".dart": [".config.dart", ".module.dart"] }
+    required_inputs: [".injectable.json"] # <- clave para que funcione
+    auto_apply: root_package
+    build_to: source

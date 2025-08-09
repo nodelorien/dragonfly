@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:dragonfly/framework/config/dragonfly_interceptor.dart';
 import 'package:dragonfly/framework/config/dragonfly_network_config.dart';
 import 'package:dragonfly/framework/di/dragonfly_container.dart';
 import 'package:dragonfly/framework/exceptions/dragonfly_exception.dart';
 import 'package:dragonfly/framework/network/adapter/dragonfly_network_http_adapter.dart';
-import 'package:get_it/get_it.dart';
 
 class DragonflyHttpBaseOptions {
   final String baseUrl;

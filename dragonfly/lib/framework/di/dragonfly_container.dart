@@ -300,4 +300,18 @@ class DragonflyContainer implements GetIt {
           param2: param2,
           instanceName: instanceName,
           type: type);
+
+  @override
+  ObjectRegistration<Object>? findFirstObjectRegistration<T extends Object>(
+      {Object? instance, String? instanceName}) {
+    // TODO: implement findFirstObjectRegistration
+    throw UnimplementedError();
+  }
+
+  @override
+  T? maybeGet<T extends Object>(
+      {param1, param2, String? instanceName, Type? type}) {
+    // TODO: implement maybeGet
+    throw UnimplementedError();
+  }
 }

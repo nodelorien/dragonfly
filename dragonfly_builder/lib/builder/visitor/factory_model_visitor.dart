@@ -1,44 +1,44 @@
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:analyzer/dart/element/visitor.dart';
+import 'package:analyzer/dart/element/visitor2.dart';
 import 'package:dragonfly_annotations/dragonfly_annotations.dart';
 import 'package:dragonfly_builder/builder/helper/metadata_extractor.dart';
 import 'package:dragonfly_builder/builder/models/factory_model_field.dart';
 import 'package:source_gen/source_gen.dart';
 
-class FactoryModelVisitor extends SimpleElementVisitor<void> {
+class FactoryModelVisitor extends SimpleElementVisitor2<void> {
   List<FactoryModelField> properties = [];
   String? className;
   List<DartType> genericTypes = [];
   bool isGeneric = false;
 
   @override
-  void visitClassElement(ClassElement e) {
-    print("[TYPE CLASS CONSTURCTOR] ${e.typeParameters}");
+  void visitClassElement(ClassElement2 e) {
+    print("[TYPE CLASS CONSTURCTOR] ${e.typeParameters2}");
   }
 
   @override
-  void visitConstructorElement(ConstructorElement element) {
+  void visitConstructorElement(ConstructorElement2 element) {
     if (element.isFactory && element.displayName.contains(".fromJson")) {
       return;
     }
     genericTypes.addAll(element.returnType.typeArguments);
     className = element.displayName;
-    for (var e in element.parameters) {
+    for (var e in element.formalParameters) {
       fillProperty(e, e.type);
     }
   }
 
   @override
-  void visitPropertyAccessorElement(PropertyAccessorElement element) {
-    fillProperty(element as ParameterElement, element.type);
+  void visitFieldFormalParameterElement(FieldFormalParameterElement2 element) {
+    fillProperty(element as FormalParameterElement, element.type);
   }
 
   DartObject? getAnnotation(element) => const TypeChecker.fromRuntime(Field)
       .firstAnnotationOf(element, throwOnUnresolved: false);
 
-  void fillProperty(ParameterElement e, DartType type) {
+  void fillProperty(FormalParameterElement e, DartType type) {
     final (isFieldName, fieldName, defaultValue) =
         resolveAnnotationFieldName(e, type);
 
