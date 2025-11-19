@@ -76,13 +76,17 @@ class DragonflyContainer implements GetIt {
 
   @override
   Iterable<T> getAll<T extends Object>(
-          {param1, param2, bool fromAllScopes = false}) =>
+          {param1, param2, bool fromAllScopes = false, String? onlyInScope}) =>
       GetIt.I
           .getAll(param1: param1, param2: param2, fromAllScopes: fromAllScopes);
 
   @override
-  Future<Iterable<T>> getAllAsync<T extends Object>(
-          {param1, param2, bool fromAllScopes = false}) =>
+  Future<Iterable<T>> getAllAsync<T extends Object>({
+    param1,
+    param2,
+    bool fromAllScopes = false,
+    String? onlyInScope,
+  }) =>
       GetIt.I.getAllAsync(
           param1: param1, param2: param2, fromAllScopes: fromAllScopes);
 
@@ -114,8 +118,9 @@ class DragonflyContainer implements GetIt {
 
   @override
   bool isRegistered<T extends Object>(
-          {Object? instance, String? instanceName}) =>
-      GetIt.I.isRegistered(instance: instance, instanceName: instanceName);
+          {Object? instance, String? instanceName, Type? type}) =>
+      GetIt.I.isRegistered(
+          instance: instance, instanceName: instanceName, type: type);
 
   @override
   Future<void> popScope() => GetIt.I.popScope();
@@ -154,7 +159,8 @@ class DragonflyContainer implements GetIt {
       GetIt.I.registerCachedFactory(factoryFunc, instanceName: instanceName);
 
   @override
-  void registerCachedFactoryAsync<T extends Object>(FactoryFunc<T> factoryFunc,
+  void registerCachedFactoryAsync<T extends Object>(
+          Future<T> Function() factoryFunc,
           {String? instanceName}) =>
       GetIt.I
           .registerCachedFactoryAsync(factoryFunc, instanceName: instanceName);
@@ -168,7 +174,7 @@ class DragonflyContainer implements GetIt {
 
   @override
   void registerCachedFactoryParamAsync<T extends Object, P1, P2>(
-          FactoryFuncParam<T, P1, P2> factoryFunc,
+          Future<T> Function(P1?, P2?) factoryFunc,
           {String? instanceName}) =>
       GetIt.I.registerCachedFactoryParamAsync(factoryFunc,
           instanceName: instanceName);
@@ -197,24 +203,29 @@ class DragonflyContainer implements GetIt {
           .registerFactoryParamAsync(factoryFunc, instanceName: instanceName);
 
   @override
-  void registerLazySingleton<T extends Object>(FactoryFunc<T> factoryFunc,
+  void registerLazySingleton<T extends Object>(T Function() factoryFunc,
           {String? instanceName,
-          DisposingFunc<T>? dispose,
+          FutureOr<dynamic> Function(T)? dispose,
+          void Function(T)? onCreated,
           bool useWeakReference = false}) =>
       GetIt.I.registerLazySingleton(factoryFunc,
           instanceName: instanceName,
           useWeakReference: useWeakReference,
+          onCreated: onCreated,
           dispose: dispose);
 
   @override
   void registerLazySingletonAsync<T extends Object>(
-          FactoryFuncAsync<T> factoryFunc,
-          {String? instanceName,
-          DisposingFunc<T>? dispose,
-          bool useWeakReference = false}) =>
+    Future<T> Function() factoryFunc, {
+    String? instanceName,
+    FutureOr<dynamic> Function(T)? dispose,
+    void Function(T)? onCreated,
+    bool useWeakReference = false,
+  }) =>
       GetIt.I.registerLazySingletonAsync(factoryFunc,
           instanceName: instanceName,
           dispose: dispose,
+          onCreated: onCreated,
           useWeakReference: useWeakReference);
 
   @override
@@ -228,15 +239,19 @@ class DragonflyContainer implements GetIt {
           dispose: dispose);
 
   @override
-  void registerSingletonAsync<T extends Object>(FactoryFuncAsync<T> factoryFunc,
-          {String? instanceName,
-          Iterable<Type>? dependsOn,
-          bool? signalsReady,
-          DisposingFunc<T>? dispose}) =>
+  void registerSingletonAsync<T extends Object>(
+    Future<T> Function() factoryFunc, {
+    String? instanceName,
+    Iterable<Type>? dependsOn,
+    bool? signalsReady,
+    FutureOr<dynamic> Function(T)? dispose,
+    void Function(T)? onCreated,
+  }) =>
       GetIt.I.registerSingletonAsync(factoryFunc,
           instanceName: instanceName,
           dependsOn: dependsOn,
           signalsReady: signalsReady,
+          onCreated: onCreated,
           dispose: dispose);
 
   @override
@@ -294,10 +309,47 @@ class DragonflyContainer implements GetIt {
           ignoreReferenceCount: ignoreReferenceCount);
 
   @override
-  T get<T extends Object>({param1, param2, String? instanceName, Type? type}) =>
-      GetIt.I.get(
-          param1: param1,
-          param2: param2,
-          instanceName: instanceName,
-          type: type);
+  List<T> findAll<T extends Object>(
+      {bool includeSubtypes = true,
+      bool inAllScopes = false,
+      String? onlyInScope,
+      bool includeMatchedByRegistrationType = true,
+      bool includeMatchedByInstance = true,
+      bool instantiateLazySingletons = false,
+      bool callFactories = false}) {
+    return GetIt.I.findAll(
+        inAllScopes: inAllScopes,
+        includeSubtypes: includeSubtypes,
+        onlyInScope: onlyInScope,
+        includeMatchedByRegistrationType: includeMatchedByRegistrationType,
+        includeMatchedByInstance: includeMatchedByInstance,
+        instantiateLazySingletons: instantiateLazySingletons,
+        callFactories: callFactories);
+  }
+
+  @override
+  ObjectRegistration<Object>? findFirstObjectRegistration<T extends Object>(
+      {Object? instance, String? instanceName}) {
+    return GetIt.I.findFirstObjectRegistration(
+        instance: instance, instanceName: instanceName);
+  }
+
+  @override
+  T? maybeGet<T extends Object>(
+      {param1, param2, String? instanceName, Type? type}) {
+    return GetIt.I.maybeGet(param1: param1, param2: param2, type: type);
+  }
+
+  @override
+  Future<void> resetLazySingletons(
+      {bool dispose = true, bool inAllScopes = false, String? onlyInScope}) {
+    return GetIt.I.resetLazySingletons(
+        dispose: dispose, inAllScopes: inAllScopes, onlyInScope: onlyInScope);
+  }
+
+  @override
+  T get<T extends Object>({param1, param2, String? instanceName, Type? type}) {
+    return GetIt.I.get(
+        param1: param1, param2: param2, instanceName: instanceName, type: type);
+  }
 }
