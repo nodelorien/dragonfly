@@ -1,4 +1,3 @@
-// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'character_repository.dart';
@@ -21,6 +20,9 @@ class _CharacterRepository implements CharacterRepository {
       null,
       null,
     );
-    return ServiceResponseCharacter.fromJson(response);
+    return ServiceResponse<Character>.fromJson(response, (json) {
+      print("====>>>>> services character repository $json");
+      return Character.fromJson(json as Map<String, Object?>);
+    });
   }
 }

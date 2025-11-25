@@ -1,9 +1,14 @@
 import 'package:dragonfly/dragonfly.dart';
 import 'package:flutter/material.dart';
 import 'package:example/components/characters/config/user_config.dart';
-import 'package:example/components/characters/data/repositories/character_repository.dart';
+import 'package:example/components/characters/config/injector.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Configure all dependencies (Repository and UseCaseComponent)
+  await configureCharactersDependencies();
+
   runApp(const MyApp());
 }
 

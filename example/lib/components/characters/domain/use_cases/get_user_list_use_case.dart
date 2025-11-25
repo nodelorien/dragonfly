@@ -1,19 +1,25 @@
-// import 'package:dragonfly/core/framework/contracts/functional/either.dart';
-
-/*import 'package:dragonfly/dragonfly.dart';
-import 'package:dragonfly_annotations/dragonfly_annotations.dart';
+import 'package:dragonfly/dragonfly.dart';
+import 'package:dragonfly_annotations/annotations/component/domain/use_case_component.dart';
 import 'package:example/components/characters/data/models/character.dart';
+import 'package:example/components/characters/data/models/service_response.dart';
 import 'package:example/components/characters/data/repositories/character_repository.dart';
 
-@UseCase()
-class GetUserListUseCase {
+@UseCaseComponent()
+class GetUserListUseCase implements UseCase {
   final CharacterRepository userRepository;
 
-  const GetUserListUseCase({required this.userRepository});
+  const GetUserListUseCase(this.userRepository);
+
+  Future<ServiceResponse<Character>> call(
+    String name,
+    List<String> params,
+  ) async {
+    return await userRepository.getAll(name, params);
+  }
 
   @override
-  Future<void> exec(params) async {
-    Future<Base<Character>> result = userRepository.getAll("", [""]);
+  Future<Either<dynamic, dynamic>> exec(params) {
+    // TODO: implement exec
+    throw UnimplementedError();
   }
 }
-*/
