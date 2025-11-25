@@ -63,9 +63,10 @@ class CreateFromJsonBuilder {
         c.requiredParameters.addAll(visitor.genericTypes.map((genType) {
           // print("===>>>> la super property ${genType}");
           return cb.Parameter((p) => p
-            ..name = "fromJson${genType.getDisplayString()}"
+            ..name =
+                "fromJson${genType.getDisplayString(withNullability: true)}"
             ..type = cb.Reference(
-                "${genType.getDisplayString()} Function(Object? json)"));
+                "${genType.getDisplayString(withNullability: true)} Function(Object? json)"));
         }));
       }
     });

@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
@@ -17,10 +17,10 @@ class RepositoryGenerator extends GeneratorForAnnotation<Repository> {
 
   @override
   String generateForAnnotatedElement(
-      Element2 element, ConstantReader annotation, BuildStep buildStep) {
+      Element element, ConstantReader annotation, BuildStep buildStep) {
     final visitor = RepositoryVisitor();
 
-    element.visitChildren2(visitor);
+    element.visitChildren(visitor);
 
     final className = visitor.className;
 
@@ -78,8 +78,7 @@ class RepositoryGenerator extends GeneratorForAnnotation<Repository> {
             ""))));
 
     final emitter = DartEmitter();
-    return DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
-        .format('${animal.accept(emitter)}');
+    return DartFormatter().format('${animal.accept(emitter)}');
   }
 
   String buildResponseWhenIsList(MethodRepositoryType method) {
