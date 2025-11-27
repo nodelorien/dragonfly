@@ -3,6 +3,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:code_builder/code_builder.dart' as cb;
 import 'package:dart_style/dart_style.dart';
+import 'package:dragonfly_annotations/annotations/injectable/injectable_annotations.dart';
 import 'package:dragonfly_builder/builder/models/dependency_config.dart';
 import 'package:dragonfly_builder/builder/models/injectable_type.dart';
 import 'package:dragonfly_builder/builder/visitor/injectable_visitor.dart';
@@ -36,6 +37,8 @@ class InjectableConfigGenerator
         continue;
       }
     }
+
+    print("==========>>>>>>>>dependencies: ${visitor.dependencies}");
 
     if (visitor.dependencies.isEmpty) {
       return '';

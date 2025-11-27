@@ -38,7 +38,7 @@ class UserService {
 }
 
 // Test use case
-@UseCaseComponent()
+@InjectableUseCase()
 class GetUserUseCase implements UseCase {
   final UserService userService;
 

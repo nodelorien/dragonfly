@@ -1,9 +1,8 @@
 library;
 
-export 'annotations/injectable/injectable_annotations.dart';
+export 'annotations/injectable/injectable_annotations.dart' show Injectable;
 export 'annotations/injectable/inyectar.dart';
 export 'annotations/component/injector/injector_config.dart';
-export 'annotations/component/domain/use_case_component.dart';
 export 'annotations/component/models/factory_model.dart' show FactoryModel;
 export 'annotations/component/models/field.dart' show Field;
 export 'annotations/component/repositoriy/repository.dart' show Repository;

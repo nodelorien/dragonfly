@@ -42,10 +42,8 @@ class RepositoryVisitor extends SimpleElementVisitor<void> {
         element.returnType.getDisplayString(withNullability: true);
 
     element.children.map((e) {
-      print("===>>>>> fragment ${e}");
+      // print("===>>>>> fragment ${e}");
     });
-
-    print("====>>>>> RETURNs > ${element.returnType}");
 
     methods.add(MethodRepositoryType(
         name: name,
