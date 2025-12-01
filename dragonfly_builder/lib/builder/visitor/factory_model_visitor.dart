@@ -53,6 +53,7 @@ class FactoryModelVisitor extends SimpleElementVisitor<void> {
 
     String listType = MedatadaExtractor.getContentOfTag(
         type.getDisplayString(withNullability: true));
+
     final bool isListClass = e.type.isDartCoreList &&
         !("bool" == listType ||
             "bool?" == listType ||
@@ -68,7 +69,8 @@ class FactoryModelVisitor extends SimpleElementVisitor<void> {
             "Object" == listType ||
             "Object?" == listType);
 
-    // print(" [==== hard code field ] ${e.type} - (${e}) :: $isListClass \n\n");
+    //print(
+    //    " [==== hard code field ] ${fieldName}, ${e.displayName} =  ${e.type} - (${e}) :: $isListClass \n\n");
 
     properties.add(FactoryModelField(
         name: e.displayName,

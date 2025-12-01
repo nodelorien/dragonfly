@@ -17,9 +17,8 @@ class _$ServiceResponse<T> implements FactoryModelWatcher, ServiceResponse<T> {
     T Function(Object? json) fromJsonT,
   ) {
     return _$ServiceResponse(
-        info: Info.fromJson(
-          json['info'] as Map<String, Object?>,
-        ),
+        info: JsonDatatypeMapper.mapForGeneric<Info>(json, 'info',
+            defaultValue: null, mustWithDefault: false),
         result: JsonDatatypeMapper.mapGenericList<T>(
             json['result'] as List, fromJsonT));
   }

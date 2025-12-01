@@ -1,6 +1,7 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/visitor.dart';
 import 'package:build/build.dart';
+import 'package:dragonfly_annotations/annotations/component/repositoriy/repository.dart';
 import 'package:dragonfly_annotations/annotations/injectable/injectable_annotations.dart';
 import 'package:dragonfly_builder/builder/models/dependency_config.dart';
 import 'package:dragonfly_builder/builder/models/importable_type.dart';
@@ -13,16 +14,32 @@ class InjectableVisitor extends SimpleElementVisitor<void> {
   final List<DependencyConfig> dependencies = [];
   final BuildStep buildStep;
 
+  // Type checkers for annotations
+  static final _useCaseChecker = TypeChecker.fromRuntime(InjectableUseCase);
+  static final _repositoryChecker = TypeChecker.fromRuntime(Repository);
+
   InjectableVisitor(this.buildStep);
 
   @override
   void visitClassElement(ClassElement element) {
-    final injectableAnnotation = TypeChecker.fromRuntime(InjectableUseCase);
-    if (!injectableAnnotation.hasAnnotationOfExact(element)) return;
-    ConstantReader? annotation =
-        ConstantReader(injectableAnnotation.firstAnnotationOfExact(element));
+    // Check for InjectableUseCase annotation
+    if (_useCaseChecker.hasAnnotationOfExact(element)) {
+      _processInjectableUseCase(element);
+      return;
+    }
+
+    // Check for Repository annotation
+    if (_repositoryChecker.hasAnnotationOfExact(element)) {
+      _processRepository(element);
+      return;
+    }
+  }
+
+  /// Process @InjectableUseCase annotated classes
+  void _processInjectableUseCase(ClassElement element) {
+    final annotation =
+        ConstantReader(_useCaseChecker.firstAnnotationOfExact(element));
     int injectableType = InjectableType.factory;
-    if (injectableAnnotation.firstAnnotationOfExact(element) == null) return;
 
     // Extract annotation data
     final asType = annotation.peek('as')?.typeValue;
@@ -40,10 +57,9 @@ class InjectableVisitor extends SimpleElementVisitor<void> {
     if (element.constructors.isEmpty) return;
 
     try {
-      final constructors = element.constructors.toList();
-      final constructor = constructors.first;
+      final constructor = element.constructors.first;
 
-      final dependencies = constructor.parameters.map((param) {
+      final deps = constructor.parameters.map((param) {
         return InjectedDependency(
           type: ImportableType(
             name: param.type.getDisplayString(withNullability: false),
@@ -71,16 +87,69 @@ class InjectableVisitor extends SimpleElementVisitor<void> {
         type: type,
         typeImpl: typeImpl,
         injectableType: injectableType,
-        dependencies: dependencies,
+        dependencies: deps,
         environments: environments,
         scope: scope,
         orderPosition: order,
       );
 
-      this.dependencies.add(config);
-      print("==========>>>>>>>> dependencies: ${this.dependencies}");
+      dependencies.add(config);
     } catch (e, s) {
-      print("==========>>>>>>>> error: $e, $s");
+      print("==========>>>>>>>> error processing use case: $e, $s");
+    }
+  }
+
+  /// Process @Repository annotated classes
+  void _processRepository(ClassElement element) {
+    final annotation =
+        ConstantReader(_repositoryChecker.firstAnnotationOfExact(element));
+
+    // Extract annotation data
+    final asType = annotation.peek('as')?.typeValue;
+    final envList = annotation.peek('env')?.listValue;
+    final scope = annotation.peek('scope')?.stringValue;
+    final order = annotation.peek('order')?.intValue ?? 0;
+
+    // Get environments
+    final environments = envList
+            ?.map((e) => e.toStringValue() ?? '')
+            .where((e) => e.isNotEmpty)
+            .toList() ??
+        [];
+
+    // Repositories are typically lazy singletons
+    int injectableType = InjectableType.lazySingleton;
+
+    try {
+      // For repositories, we register the abstract class
+      // The factory constructor redirects to the generated implementation
+      final typeImpl = ImportableType(
+        name: element.name,
+        import: element.librarySource.uri.toString(),
+      );
+
+      final type = asType != null
+          ? ImportableType(
+              name: asType.getDisplayString(withNullability: false),
+              import: asType.element?.librarySource?.uri.toString(),
+            )
+          : typeImpl;
+
+      // Repositories typically don't have constructor dependencies
+      // (they use the DI container internally for network adapters)
+      final config = DependencyConfig(
+        type: type,
+        typeImpl: typeImpl,
+        injectableType: injectableType,
+        dependencies: [],
+        environments: environments,
+        scope: scope,
+        orderPosition: order,
+      );
+
+      dependencies.add(config);
+    } catch (e, s) {
+      print("==========>>>>>>>> error processing repository: $e, $s");
     }
   }
 }

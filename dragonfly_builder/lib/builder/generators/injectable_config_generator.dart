@@ -10,7 +10,6 @@ import 'package:dragonfly_builder/builder/visitor/injectable_visitor.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'package:glob/glob.dart';
-import 'package:dragonfly_annotations/dragonfly_annotations.dart';
 
 /// Generator that creates a .config.dart file with all dependency registrations
 class InjectableConfigGenerator
@@ -38,8 +37,6 @@ class InjectableConfigGenerator
       }
     }
 
-    print("==========>>>>>>>>dependencies: ${visitor.dependencies}");
-
     if (visitor.dependencies.isEmpty) {
       return '';
     }
@@ -47,14 +44,6 @@ class InjectableConfigGenerator
     // Sort dependencies by order
     final sortedDeps = List<DependencyConfig>.from(visitor.dependencies)
       ..sort((a, b) => a.orderPosition.compareTo(b.orderPosition));
-
-    // Generate the configuration code
-    // We need a LibraryReader for the current library to pass to _generateConfigCode
-    // But _generateConfigCode doesn't actually use LibraryReader for anything critical other than maybe checking imports?
-    // Let's check _generateConfigCode implementation.
-    // It takes LibraryReader but only uses it to get the library element? No, it doesn't seem to use it.
-    // Let's check the file content again.
-
     return _generateConfigCode(sortedDeps);
   }
 
@@ -92,7 +81,6 @@ class InjectableConfigGenerator
 
     // Add imports
     code.writeln("import 'package:dragonfly/dragonfly.dart';");
-    code.writeln("import 'package:get_it/get_it.dart';");
     code.writeln();
 
     for (final import in imports) {

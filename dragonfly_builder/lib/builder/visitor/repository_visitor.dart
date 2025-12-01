@@ -32,29 +32,32 @@ class RepositoryVisitor extends SimpleElementVisitor<void> {
 
   @override
   void visitMethodElement(MethodElement element) {
-    String name = element.displayName;
-    String path = MedatadaExtractor.getAnnotationMethodField(element, 'path');
+    try {
+      String name = element.displayName;
+      String path = MedatadaExtractor.getAnnotationMethodField(element, 'path');
 
-    Map<DartObject, DartObject>? headers =
-        MedatadaExtractor.getAnnotationMethodField(element, 'headers');
+      Map<DartObject, DartObject>? headers =
+          MedatadaExtractor.getAnnotationMethodField(element, 'headers');
 
-    final String returnName =
-        element.returnType.getDisplayString(withNullability: true);
+      final String returnName =
+          element.returnType.getDisplayString(withNullability: true);
 
-    element.children.map((e) {
-      // print("===>>>>> fragment ${e}");
-    });
-
-    methods.add(MethodRepositoryType(
-        name: name,
-        params: ParameterHelper().parametersResolver(element.parameters),
-        path: path,
-        returnType: ReturnType(
-            modelName: ReturnHelper().getTypeFromReturn(returnName),
-            raw: returnName,
-            isList: ReturnHelper().isReturnList(returnName)),
-        type: MedatadaExtractor.getMethodType(element),
-        headers: HeaderHelper().fromDartObject2HeaderType(headers),
-        isFuture: false));
+      final returnHelper = ReturnHelper();
+      methods.add(MethodRepositoryType(
+          name: name,
+          params: ParameterHelper().parametersResolver(element.parameters),
+          path: path,
+          returnType: ReturnType(
+              modelName: returnHelper.getTypeFromReturn(returnName),
+              name: returnHelper.getMainClassName(returnName),
+              raw: returnName,
+              isList: returnHelper.isReturnList(returnName),
+              generics: returnHelper.extractGenerics(returnName)),
+          type: MedatadaExtractor.getMethodType(element),
+          headers: HeaderHelper().fromDartObject2HeaderType(headers),
+          isFuture: false));
+    } catch (e) {
+      print("====>>>>>>>>> error on methods visitor ${e}");
+    }
   }
 }

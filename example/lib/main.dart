@@ -1,4 +1,5 @@
 import 'package:dragonfly/dragonfly.dart';
+import 'package:example/components/characters/domain/use_cases/get_user_list_use_case.dart';
 import 'package:flutter/material.dart';
 import 'package:example/components/characters/config/user_config.dart';
 import 'package:example/components/characters/config/injector.dart';
@@ -7,8 +8,16 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Configure all dependencies (Repository and UseCaseComponent)
-  await configureCharactersDependencies();
+  await initDragonflyContainer();
 
+  await DragonflyContainer()
+      .get<GetUserListUseCase>()
+      .call("Rick", ["1", "2", "3"])
+      .then((value) {
+        print(
+          "===>>>> value: ${value.fold((l) => l.toString(), (r) => r.toString())}",
+        );
+      });
   runApp(const MyApp());
 }
 

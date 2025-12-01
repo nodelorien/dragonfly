@@ -6,7 +6,7 @@ class ParameterHelper {
   List<ParamsType> parametersResolver(List<ParameterElement> parameters) {
     List<ParamsType> params = [];
     for (ParameterElement paramElement in parameters) {
-      print("====>>>>>>>>> ${paramElement.type}");
+      //print("====>>>>>>>>> ${paramElement.type}");
       params.add(ParamsType(
           name: paramElement.displayName,
           paramDataType: "${paramElement.type}",

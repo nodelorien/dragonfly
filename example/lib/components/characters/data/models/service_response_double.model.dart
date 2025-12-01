@@ -24,8 +24,8 @@ class _$ServiceResponseDouble<T, R>
             json, 'info', defaultValue: null, mustWithDefault: false),
         result: JsonDatatypeMapper.mapGenericList<R>(
             json['result'] as List, fromJsonR),
-        res: JsonDatatypeMapper.mapGenericList<T>(
-            json['res'] as List, fromJsonT));
+        res: JsonDatatypeMapper.mapForGeneric<T>(json, 'res',
+            defaultValue: null, mustWithDefault: false));
   }
 
   @override
@@ -35,7 +35,7 @@ class _$ServiceResponseDouble<T, R>
   final List<R> result;
 
   @override
-  final List<T> res;
+  final T res;
 }
 
 abstract class _$ServiceResponseDoubleContract<T, R> {
@@ -43,5 +43,5 @@ abstract class _$ServiceResponseDoubleContract<T, R> {
 
   List<R> get result;
 
-  List<T> get res;
+  T get res;
 }
